@@ -17,6 +17,8 @@ h1{
     padding:8px;
     border-radius:8px;
 	font-weight: bold;
+    margin:auto;
+    width:40rem;
 }
 
 html {
@@ -24,18 +26,13 @@ html {
   box-sizing: border-box;
 }
 
-*, *::before, *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: inherit;
-}
 
 .calculator {
   border: 1px solid #ccc;
   border-radius: 5px;
-  margin-left: 20%;
+  margin:auto;
   padding-top: 20px;
-  width: 400px;
+  width: 600px;
   position:relative;
   top: 20px;
   
@@ -53,9 +50,9 @@ html {
   z-index: -1;   
 }
 .calculator-screen {
-  width: 80%;
+  width: 90%;
   font-family:Georgia, serif;
-  margin:5px 10% 5px 10%;
+  margin:5px 5% 5px 5%;
   padding:10px 0 0 0;
   font-size: 4.5rem;
   height: 80px;
@@ -97,10 +94,12 @@ button:hover {  border: 3px solid #9f9;}
 .rotate {  transform: rotate(180deg); }
   
 .calculator-keys {
+  width:70%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 20px;
-  padding: 20px;
+  padding: 30px;
+  margin:auto;
 }
 @media(max-width: 500px) {
 	body{
@@ -141,7 +140,6 @@ function clickfunc(event){
     event = event || window.event;
     event.target.blur();
     var value = event.target.value || event.target.textContent;
-    console.log("value:" + value);
 
     if (value == "i") value = "M";
     var id = 'MDCLXVImdclxv'.indexOf(value);
@@ -151,13 +149,13 @@ function clickfunc(event){
             screen.innerHTML = "";
         }
         var whole = screen.textContent + value;
-        console.log(whole + "|" + validRoman(whole));
+        //console.log(whole + "|" + validRoman(whole));
         if ( validRoman(whole)){
             if (id > 6) screen.innerHTML = screen.innerHTML + "<span class=putBar>"+  value + "</span>";
             else screen.innerHTML = screen.innerHTML + value;
         }
     } else if (event.target.className.indexOf("operator") > -1) {
-        console.log("operator");
+        //console.log("operator");
         process_op(value);
     } else if (value == "^") {
         set_high();
@@ -172,10 +170,10 @@ function process_op(operator){
     var r = register;
     register = screen.textContent;
 
-    console.log("screen.textContent:",screen.textContent);
+    //console.log("screen.textContent:",screen.textContent);
 
     if (last_operator){
-        console.log("Last op was : " + last_operator);
+        //console.log("Last op was : " + last_operator);
         var nbr = roman2Arabic(r);
         var nbr_new = roman2Arabic(register);
         var result = calc(nbr, nbr_new, last_operator);
@@ -189,7 +187,7 @@ function process_op(operator){
 
 function calc(x,y,action){
     var z = null;
-    console.log("calc " + x + " | " + y + " | " + action)
+    //console.log("calc " + x + " | " + y + " | " + action)
     if (action == '+') {
         z = x + y;
     } else if (action == '-') {
@@ -204,16 +202,9 @@ function calc(x,y,action){
     
     return int_to_roman(~~z);
 }
-/*
-function validRoman(string){
-    // regex pattern: This works but only for capitalized. Validating with high range numbers allowed is more difficult 
-    const pattern = /^(m{1,4}(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})|m{0,4}(cm|c?d|d?c{1,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})|m{0,4}(cm|cd|d?c{0,3})(xc|x?l|l?x{1,3})(ix|iv|v?i{0,3})|m{0,4}(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|i?v|v?i{1,3})M{1,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})|M{0,4}(CM|C?D|D?C{1,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})|M{0,4}(CM|CD|D?C{0,3})(XC|X?L|L?X{1,3})(IX|IV|V?I{0,3})|M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|I?V|V?I{1,3}))$/
-    return pattern.test(string);
-};
-*/
 function validRoman(rom){
-    const strings = ['m', 'cm', 'd', 'cd', 'c', 'xc', 'l', 'xl', 'x', 'Mx', 'Mv', 'v', "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"];
-    const norepeat= ["DD","VV","LL","dd","vv","ll","MMMM","CCCC","IIII","mmmm","cccc","iiii"];
+    const strings = ['m', 'cm', 'd', 'cd', 'c', 'xc', 'l', 'xl', 'x', 'Mx', 'v', 'Mv', "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"];
+    const norepeat= ["DD","VV","LL","xxxx","XXXX","dd","vv","ll","MMMM","CCCC","IIII","mmmm","cccc","iiii"];
 
     // must not repeat D, V or L
     for ( var i=0; i< norepeat.length; i++ ){
@@ -222,7 +213,7 @@ function validRoman(rom){
     }
 
     var furthest = -1;
-    for ( var i=0; i< rom.length; i++ ){
+    for ( var i=0; i< rom.length;  ){
         var matchlength = 0;
         var prom = rom.substring(i);
         
@@ -230,23 +221,22 @@ function validRoman(rom){
             if (prom.indexOf(strings[s]) == 0){
                 matchlength = strings[s].length;
                 if ( s < furthest) {
-                    console.log("not valid "+i + ":" + rom + "|"+ strings[s] + "|" + s+ "|" + furthest+ " matchlength:" + matchlength);
+                    //console.log("not valid "+i + ":" + rom + "|"+ strings[s] + "|" + s+ "|" + furthest+ " matchlength:" + matchlength);
                     return false;
                 }
-                console.log("valid ",i + ":" + rom + "|"+ strings[s] + "|" + s+ "|" + furthest + " matchlength:" + matchlength);
+                //console.log("valid ",i + ":" + rom + "|"+ strings[s] + "|" + s+ "|" + furthest + " matchlength:" + matchlength);
                 furthest = s;
                 break;
             }
         }
         if (!matchlength) return false;
-        //rom = rom.substring( matchlength );
+        i += matchlength;
     }
     
     return true;
 }
 
 function set_high(){
-    console.log("sethigh");
     high_button = document.getElementById("sethigh");
     high = (high_button.className.indexOf("rotate") == -1);
     var nbrs = document.getElementsByClassName("nbr");
@@ -267,8 +257,14 @@ function int_to_roman(num){
 
     const strings = ['m', 'cm', 'd', 'cd', 'c', 'xc', 'l', 'xl', 'x', 'ix', 'v', 'iv', "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"];
 
-    if ( num > 3999000) return "Overflow";
-    if ( num < 1 ) return "Underflow";
+    if ( num > 4999999) {
+        new_entry=true;    
+        return "Overflow";
+    }
+    if ( num < 1 ) {
+        new_entry=true;
+        return "Underflow";
+    }
     
     var result = "";
     while (num > 0){
